@@ -77,6 +77,35 @@ describe('bh.match()', function() {
         );
     });
 
+    it('should match new mods', function() {
+        bh.match('button_disabled', function(ctx) {
+            ctx.tag('span');
+        });
+        bh.match('button', function(ctx) {
+            ctx.mod('disabled', true);
+            ctx.applyBase();
+        });
+        bh.apply({ block: 'button' }).should.equal(
+            '<span class="button button_disabled"></span>'
+        );
+    });
+
+    it('should match new mods', function() {
+        bh.match('button_visible', function(ctx) {
+            ctx.tag('a');
+        });
+        bh.match('button_disabled', function(ctx) {
+            ctx.mod('visible', true);
+            ctx.mix({ block: 'clearfix' });
+        });
+        bh.match('button', function(ctx) {
+            ctx.mod('disabled', true);
+        });
+        bh.apply({ block: 'button', mods: { disabled: true } }).should.equal(
+            '<a class="button button_disabled button_visible clearfix"></a>'
+        );
+    });
+
     it('should not fail on non-identifier mods', function() {
         bh.match('button_is-bem_yes__control', function(ctx) {
             ctx.content('Hello');
